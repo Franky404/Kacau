@@ -1,1 +1,214 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galeri Foto</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101114;
+  color: white;
+}
+
+header {
+  padding: 20px 16px;
+  background: #1b1c22;
+  position: sticky;
+  top: 0;
+}
+
+h2 { margin: 0 0 12px; }
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  background: #292a30;
+  color: white;
+  font-size: 16px;
+}
+
+#galeri {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.foto {
+  background: #22242a;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.foto img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.nama {
+  padding: 9px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+#viewer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0,0,0,.96);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 15px;
+}
+
+#gambarBesar {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+#namaBesar {
+  margin: 12px;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.tombol {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  margin: 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#tutup { background: #e5484d; color: white; }
+#unduh { background: #fff; color: #111; }
+
+.kosong {
+  padding: 20px;
+  color: #aaa;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <h2>📷 Galeri Foto</h2>
+  <input id="cari" type="search"
+    placeholder="Cari nama foto...">
+</header>
+
+<div id="galeri"></div>
+
+<div id="viewer">
+  <img id="gambarBesar" alt="Foto pilihan">
+  <div id="namaBesar"></div>
+  <div>
+    <button class="tombol" id="unduh">Unduh Foto</button>
+    <button class="tombol" id="tutup">Tutup ✕</button>
+  </div>
+</div>
+
+<script>
+const daftarFoto = [
+  "IMG_20260914_220841_510.jpg",
+  "IMG_20261014_192427_034.jpg",
+  "Screenshot_20261025-134614.jpg"
+];
+
+const galeri = document.getElementById("galeri");
+const viewer = document.getElementById("viewer");
+const gambarBesar = document.getElementById("gambarBesar");
+const namaBesar = document.getElementById("namaBesar");
+
+let fotoAktif = "";
+
+function tampilkanFoto() {
+  const kata = document.getElementById("cari").value.toLowerCase();
+  galeri.innerHTML = "";
+
+  const hasil = daftarFoto.filter(nama =>
+    nama.toLowerCase().includes(kata)
+  );
+
+  if (hasil.length === 0) {
+    galeri.innerHTML =
+      '<div class="kosong">Foto tidak ditemukan.</div>';
+    return;
+  }
+
+  hasil.forEach(nama => {
+    const kartu = document.createElement("div");
+    kartu.className = "foto";
+
+    const img = document.createElement("img");
+    img.src = encodeURI(nama);
+    img.alt = nama;
+    img.loading = "lazy";
+
+    img.onerror = () => {
+      img.alt = "Foto tidak ditemukan";
+      img.style.height = "100px";
+    };
+
+    const label = document.createElement("div");
+    label.className = "nama";
+    label.textContent = nama;
+
+    kartu.append(img, label);
+    kartu.onclick = () => bukaFoto(nama);
+
+    galeri.appendChild(kartu);
+  });
+}
+
+function bukaFoto(nama) {
+  fotoAktif = nama;
+  gambarBesar.src = encodeURI(nama);
+  namaBesar.textContent = nama;
+  viewer.style.display = "flex";
+}
+
+document.getElementById("tutup").onclick = () => {
+  viewer.style.display = "none";
+  gambarBesar.src = "";
+};
+
+document.getElementById("unduh").onclick = () => {
+  const a = document.createElement("a");
+  a.href = encodeURI(fotoAktif);
+  a.download = fotoAktif;
+  a.click();
+};
+
+document.getElementById("cari").addEventListener(
+  "input", tampilkanFoto
+);
+
+viewer.onclick = e => {
+  if (e.target === viewer) {
+    viewer.style.display = "none";
+    gambarBesar.src = "";
+  }
+};
+
+tampilkanFoto();
+</script>
+</body>
+</html>
