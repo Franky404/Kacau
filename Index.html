@@ -1,1 +1,157 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bukti Gadai HP</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  padding: 15px;
+}
+.container {
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+}
+h2 { text-align: center; }
+label {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+}
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 7px;
+  background: #075bbb;
+  color: white;
+  font-size: 16px;
+}
+#struk { display: none; }
+
+@media print {
+  body { background: white; padding: 0; }
+  .container, button { display: none !important; }
+  #struk {
+    display: block;
+    width: 100%;
+    font: 12px monospace;
+    color: black;
+  }
+  @page { margin: 3mm; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Form Gadai HP</h2>
+
+<form id="form">
+<div id="fields"></div>
+<button type="button" onclick="cetak()">
+  Cetak Bukti
+</button>
+</form>
+</div>
+
+<div id="struk"></div>
+
+<script>
+const daftar = [
+  ["NIK","nik"],
+  ["Nama","nama"],
+  ["Alamat","alamat"],
+  ["TTL","ttl"],
+  ["No HP","hp"],
+  ["Merk/Seri HP","merk"],
+  ["RAM HP","ram"],
+  ["No Rek/E-wallet","rekening"],
+  ["Tanggal ACC","acc"],
+  ["Jatuh Tempo","tempo"],
+  ["Nominal Harga HP yang Digadai","harga"],
+  ["Nominal yang Ditebus","tebus"]
+];
+
+const fields = document.getElementById("fields");
+
+daftar.forEach(([label,id]) => {
+  const inputType = ["acc","tempo"].includes(id)
+    ? "date" : "text";
+  fields.insertAdjacentHTML("beforeend", `
+    <label>${label}
+      <input id="${id}" ${id==="nama" ? "required" : ""}
+      type="${inputType}"
+      ${["harga","tebus"].includes(id)
+        ? 'inputmode="numeric"' : ""}>
+    </label>
+  `);
+});
+
+function nilai(id) {
+  return document.getElementById(id).value.trim() || "-";
+}
+
+function cetak() {
+  if (!document.getElementById("nama").value.trim()) {
+    alert("Silakan isi nama terlebih dahulu.");
+    return;
+  }
+
+  const sekarang = new Date();
+  const tanggal = sekarang.toLocaleDateString("id-ID");
+  const waktu = sekarang.toLocaleTimeString("id-ID");
+
+  const baris = (label,id) =>
+    `<div>${label}: ${nilai(id)}</div>`;
+
+  document.getElementById("struk").innerHTML = `
+    <center>
+      <b>BUKTI TRANSAKSI GADAI HP</b>
+      <hr>
+      ${tanggal}<br>${waktu}
+      <hr>
+    </center>
+    ${baris("NIK","nik")}
+    ${baris("Nama","nama")}
+    ${baris("Alamat","alamat")}
+    ${baris("TTL","ttl")}
+    ${baris("No HP","hp")}
+    ${baris("Merk/Seri HP","merk")}
+    ${baris("RAM HP","ram")}
+    ${baris("No Rek/E-wallet","rekening")}
+    <hr>
+    ${baris("TANGGAL ACC","acc")}
+    ${baris("JATUH TEMPO","tempo")}
+    <hr>
+    <b>NOMINAL HARGA HP YG DIGADAI:</b><br>
+    Rp ${nilai("harga")}<br><br>
+    <b>NOMINAL YANG DITEBUS:</b><br>
+    Rp ${nilai("tebus")}
+    <hr>
+    <center>
+      <b>NOTE: WAJIB MEMBAWA KERTAS
+      BUKTI TRANSAKSI</b>
+    </center>
+  `;
+
+  window.print();
+}
+</script>
+</body>
+</html>
