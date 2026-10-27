@@ -1,157 +1,263 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bukti Gadai HP</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123b67">
+<title>Bukti Gadai HP — KACAU</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
-  padding: 15px;
-}
-.container {
-  max-width: 420px;
-  margin: auto;
-  background: white;
-  padding: 18px;
-  border-radius: 12px;
-}
-h2 { text-align: center; }
-label {
-  display: block;
-  margin-top: 12px;
-  font-size: 14px;
-}
-input {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-button {
-  width: 100%;
-  padding: 13px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 7px;
-  background: #075bbb;
-  color: white;
-  font-size: 16px;
-}
-#struk { display: none; }
-
-@media print {
-  body { background: white; padding: 0; }
-  .container, button { display: none !important; }
-  #struk {
-    display: block;
-    width: 100%;
-    font: 12px monospace;
-    color: black;
-  }
-  @page { margin: 3mm; }
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#172033;background:#eef2f7}
+*{box-sizing:border-box}
+body{margin:0;padding:14px}
+main{max-width:620px;margin:auto}
+header{background:#123b67;color:white;border-radius:16px;padding:18px;margin-bottom:14px}
+header h1{font-size:1.35rem;margin:0 0 6px}
+header p{margin:0;font-size:.92rem;opacity:.92}
+.panel{background:#fff;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 2px 10px #14243a0b}
+h2{font-size:1.05rem;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+label{display:block;font-size:.88rem;font-weight:650}
+input,textarea{display:block;width:100%;margin-top:5px;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;background:white;color:#172033}
+button{width:100%;border:0;border-radius:10px;padding:12px 14px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px}
+.primary{background:#0b63ce;color:#fff}.secondary{background:#e7eef8;color:#123b67}.danger{background:#fff0f0;color:#9b1c1c}
+.status{font-size:.9rem;padding:10px;border-radius:9px;background:#f1f5f9;margin-top:10px;white-space:pre-wrap}
+.small{font-size:.82rem;color:#526174;line-height:1.45}
+.receipt-wrap{overflow:auto;background:#f8fafc;padding:10px;border-radius:10px}
+#receipt{width:58mm;max-width:100%;margin:auto;background:#fff;color:#000;padding:3mm;font:12px/1.35 monospace;overflow-wrap:anywhere}
+#receipt h3{text-align:center;font-size:15px;margin:0 0 5px}
+.center{text-align:center}.rule{border:0;border-top:1px dashed #000;margin:7px 0}
+.line{display:flex;gap:4px;align-items:flex-start;margin:3px 0}
+.line .key{flex:0 0 37%;}.line .val{flex:1;min-width:0;overflow-wrap:anywhere}
+.money{font-weight:bold;margin:4px 0 8px}
+.note{text-align:center;font-weight:bold;margin-top:8px}
+@media(min-width:520px){.grid{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}}
+@media print{
+ @page{size:58mm auto;margin:0}
+ html,body{width:58mm!important;margin:0!important;padding:0!important;background:#fff!important}
+ body *{visibility:hidden!important}
+ #receipt,#receipt *{visibility:visible!important}
+ #receipt{position:absolute;left:0;top:0;width:58mm!important;max-width:none!important;margin:0!important;padding:2mm!important;box-shadow:none!important}
+ .no-print{display:none!important}
 }
 </style>
 </head>
 <body>
+<main class="no-print">
+<header>
+<h1>🗿Bukti Gadai HP🗿</h1>
+<p>🗿KICAU KICAU MANIA🗿</p>
+</header>
 
-<div class="container">
-<h2>Form Gadai HP</h2>
-
-<form id="form">
-<div id="fields"></div>
-<button type="button" onclick="cetak()">
-  Cetak Bukti
-</button>
-</form>
+<section class="panel">
+<h2>1. Data transaksi</h2>
+<div class="grid" id="fields">
+<label>NIK<input id="nik" autocomplete="off"></label>
+<label>Nama<input id="nama" autocomplete="name" required></label>
+<label class="wide">Alamat<textarea id="alamat" rows="2" autocomplete="street-address"></textarea></label>
+<label>TTL<input id="ttl" placeholder="Kota, DD-MM-YYYY"></label>
+<label>No HP<input id="hp" inputmode="tel" autocomplete="tel"></label>
+<label>Merk/Seri HP<input id="merk" placeholder="Contoh: Samsung A52"></label>
+<label>RAM HP<input id="ram" placeholder="Contoh: 8 GB"></label>
+<label>Bank/E-wallet<input id="bank" placeholder="Contoh: DANA / BCA" autocomplete="off"></label>
+<label>No. Rekening/E-wallet<input id="rekening" placeholder="Masukkan nomornya" inputmode="numeric" autocomplete="off"></label>
+<label>Tanggal ACC<input id="acc" type="date"></label>
+<label>Jatuh Tempo<input id="tempo" type="date"></label>
+<label>Nominal harga HP yang digadai (Rp)<input id="harga" inputmode="numeric" placeholder="2500000"></label>
+<label>Nominal yang ditebus (Rp)<input id="tebus" inputmode="numeric" placeholder="1500000"></label>
 </div>
+<button class="secondary" type="button" id="previewBtn">Perbarui Pratinjau</button>
+<button class="secondary" type="button" id="saveBtn">Simpan data di perangkat ini</button>
+<button class="danger" type="button" id="clearBtn">Kosongkan formulir</button>
+<p class="small">Data yang disimpan tetap berada di penyimpanan browser perangkat ini. Jangan simpan data pelanggan di HP bersama atau perangkat umum.</p>
+</section>
 
-<div id="struk"></div>
+<section class="panel">
+<h2>2. Sambungkan printer Bluetooth</h2>
+<button class="primary" type="button" id="connectBtn">Sambungkan Printer BLE</button>
+<button class="secondary" type="button" id="disconnectBtn">Putuskan printer</button>
+<div class="status" id="status">Belum tersambung. Gunakan Chrome di Android dan izinkan Bluetooth saat diminta.</div>
+<p class="small"><b>Catatan kompatibilitas:</b> tombol ini mendukung printer BLE yang mengekspos karakteristik tulis (write). Banyak printer thermal 58 mm menggunakan Bluetooth Classic/SPP dan tidak dapat disambungkan langsung melalui Web Bluetooth. Jika printer tidak muncul, periksa manual/model printer; jangan menganggap semua printer Bluetooth kompatibel.</p>
+</section>
+
+<section class="panel">
+<h2>3. Pratinjau struk</h2>
+<div class="receipt-wrap"><div id="receipt">
+<h3>BUKTI TRANSAKSI GADAI HP</h3>
+<div class="center" id="datetime">Tanggal — · Waktu —</div>
+<hr class="rule">
+<div id="receiptFields"></div>
+<hr class="rule">
+<div><b>NOMINAL HARGA HP YG DI GADAI:</b></div>
+<div class="money" id="rHarga">Rp -</div>
+<div><b>NOMINAL YANG DITEBUS:</b></div>
+<div class="money" id="rTebus">Rp -</div>
+<hr class="rule">
+<div class="note">NOTE: WAJIB MEMBAWA<br>KERTAS BUKTI TRANSAKSI</div>
+</div></div>
+<button class="primary" type="button" id="printBtn">Cetak ke Printer Bluetooth</button>
+<button class="secondary" type="button" id="browserPrintBtn">Cetak lewat menu Android (cadangan)</button>
+<p class="small">Cetak Bluetooth langsung hanya berfungsi setelah printer BLE kompatibel berhasil tersambung. Cetak lewat menu Android bergantung pada layanan cetak yang tersedia.</p>
+</section>
+</main>
 
 <script>
-const daftar = [
-  ["NIK","nik"],
-  ["Nama","nama"],
-  ["Alamat","alamat"],
-  ["TTL","ttl"],
-  ["No HP","hp"],
-  ["Merk/Seri HP","merk"],
-  ["RAM HP","ram"],
-  ["No Rek/E-wallet","rekening"],
-  ["Tanggal ACC","acc"],
-  ["Jatuh Tempo","tempo"],
-  ["Nominal Harga HP yang Digadai","harga"],
-  ["Nominal yang Ditebus","tebus"]
-];
-
-const fields = document.getElementById("fields");
-
-daftar.forEach(([label,id]) => {
-  const inputType = ["acc","tempo"].includes(id)
-    ? "date" : "text";
-  fields.insertAdjacentHTML("beforeend", `
-    <label>${label}
-      <input id="${id}" ${id==="nama" ? "required" : ""}
-      type="${inputType}"
-      ${["harga","tebus"].includes(id)
-        ? 'inputmode="numeric"' : ""}>
-    </label>
-  `);
-});
-
-function nilai(id) {
-  return document.getElementById(id).value.trim() || "-";
+const ids = ["nik","nama","alamat","ttl","hp","merk","ram","bank","rekening","acc","tempo","harga","tebus"];
+let bleDevice = null, writeCharacteristic = null;
+const $ = id => document.getElementById(id);
+const statusBox = $("status");
+function status(msg){statusBox.textContent=msg}
+function clean(v){return (v||"").trim() || "-"}
+function rupiah(v){
+  const digits=(v||"").replace(/[^\d]/g,"");
+  if(!digits) return "-";
+  return Number(digits).toLocaleString("id-ID");
 }
-
-function cetak() {
-  if (!document.getElementById("nama").value.trim()) {
-    alert("Silakan isi nama terlebih dahulu.");
-    return;
+function localDateTime(){
+  const d=new Date();
+  return {
+    date:d.toLocaleDateString("id-ID",{day:"2-digit",month:"2-digit",year:"numeric"}),
+    time:d.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false})
+  };
+}
+function updateReceipt(){
+  const dt=localDateTime();
+  $("datetime").textContent=dt.date+" · "+dt.time;
+  const labels=[
+    ["NIK","nik"],["Nama","nama"],["Alamat","alamat"],["TTL","ttl"],
+    ["No HP","hp"],["Merk/Seri HP","merk"],["RAM HP","ram"],["Bank/E-wallet","bank"],["No Rek/E-wallet","rekening"],
+    ["TANGGAL ACC","acc"],["JATUH TEMPO","tempo"]
+  ];
+  $("receiptFields").replaceChildren();
+  labels.forEach(([label,id])=>{
+    const row=document.createElement("div"); row.className="line";
+    const key=document.createElement("span");key.className="key";key.textContent=label;
+    const val=document.createElement("span");val.className="val";
+    let value=clean($(id).value);
+    if((id==="acc"||id==="tempo") && $(id).value){
+      const [y,m,d]=$(id).value.split("-"); value=`${d}-${m}-${y}`;
+    }
+    val.textContent=value;
+    row.append(key,val);$("receiptFields").append(row);
+  });
+  $("rHarga").textContent="Rp "+rupiah($("harga").value);
+  $("rTebus").textContent="Rp "+rupiah($("tebus").value);
+}
+function bytesForText(s){
+  // ESC/POS text commonly uses a printer's configured code page; UTF-8 accents may vary by model.
+  return new TextEncoder().encode(s);
+}
+function escposReceipt(){
+  updateReceipt();
+  const dt=localDateTime();
+  const parts=[];
+  const add=s=>parts.push(bytesForText(s));
+  // ESC @ initialize; center title; left body; feed and cut (cut command may be ignored by printers without cutter)
+  parts.push(new Uint8Array([0x1b,0x40]));
+  parts.push(new Uint8Array([0x1b,0x61,0x01]));
+  add("BUKTI TRANSAKSI GADAI HP\n");
+  add(dt.date+"  "+dt.time+"\n");
+  add("--------------------------------\n");
+  parts.push(new Uint8Array([0x1b,0x61,0x00]));
+  const labels=[
+    ["NIK","nik"],["Nama","nama"],["Alamat","alamat"],["TTL","ttl"],
+    ["No HP","hp"],["Merk/Seri HP","merk"],["RAM HP","ram"],["Bank/E-wallet","bank"],["No Rek/E-wallet","rekening"],
+    ["TANGGAL ACC","acc"],["JATUH TEMPO","tempo"]
+  ];
+  labels.forEach(([label,id])=>{
+    let value=clean($(id).value);
+    if((id==="acc"||id==="tempo") && $(id).value){
+      const [y,m,d]=$(id).value.split("-"); value=`${d}-${m}-${y}`;
+    }
+    add(label+": "+value+"\n");
+  });
+  add("--------------------------------\n");
+  add("NOMINAL HARGA HP YG DI GADAI:\nRp "+rupiah($("harga").value)+"\n");
+  add("NOMINAL YANG DITEBUS:\nRp "+rupiah($("tebus").value)+"\n");
+  add("--------------------------------\n");
+  parts.push(new Uint8Array([0x1b,0x61,0x01]));
+  add("NOTE: WAJIB MEMBAWA\nKERTAS BUKTI TRANSAKSI\n\n\n");
+  parts.push(new Uint8Array([0x1d,0x56,0x00]));
+  const length=parts.reduce((n,p)=>n+p.length,0);
+  const out=new Uint8Array(length);let offset=0;
+  parts.forEach(p=>{out.set(p,offset);offset+=p.length});
+  return out;
+}
+async function connectPrinter(){
+  if(!("bluetooth" in navigator)){status("Web Bluetooth tidak tersedia di browser ini. Coba Chrome Android versi terbaru; printer Bluetooth Classic tetap mungkin tidak didukung.");return}
+  try{
+    status("Mencari perangkat BLE… pilih printer jika muncul.");
+    bleDevice=await navigator.bluetooth.requestDevice({
+      acceptAllDevices:true,
+      optionalServices:["000018f0-0000-1000-8000-00805f9b34fb","0000ffe0-0000-1000-8000-00805f9b34fb","0000ff00-0000-1000-8000-00805f9b34fb"]
+    });
+    bleDevice.addEventListener("gattserverdisconnected",()=>{
+      writeCharacteristic=null;status("Printer terputus.");
+    });
+    const server=await bleDevice.gatt.connect();
+    let services=[];
+    try{services=await server.getPrimaryServices()}catch(e){}
+    // Try common BLE printer service UUIDs, then discover writable characteristics from discovered services.
+    const known=["000018f0-0000-1000-8000-00805f9b34fb","0000ffe0-0000-1000-8000-00805f9b34fb","0000ff00-0000-1000-8000-00805f9b34fb"];
+    for(const uuid of known){
+      try{const s=await server.getPrimaryService(uuid);if(!services.some(x=>x.uuid===s.uuid))services.push(s)}catch(e){}
+    }
+    for(const service of services){
+      let chars=[];
+      try{chars=await service.getCharacteristics()}catch(e){}
+      writeCharacteristic=chars.find(c=>c.properties.writeWithoutResponse) ||
+        chars.find(c=>c.properties.write) || null;
+      if(writeCharacteristic) break;
+    }
+    if(!writeCharacteristic){
+      try{bleDevice.gatt.disconnect()}catch(e){}
+      status("Perangkat tersambung, tetapi karakteristik tulis BLE tidak ditemukan. Printer mungkin Bluetooth Classic/SPP atau memakai protokol khusus. Cek manual printer.");
+      return;
+    }
+    status("Tersambung: "+(bleDevice.name||"printer BLE")+". Jika cetak gagal, model ini mungkin membutuhkan protokol/UUID khusus.");
+  }catch(err){
+    status("Tidak berhasil menyambungkan printer: "+(err.message||err)+". Pastikan Bluetooth aktif, printer menyala, dan buka website melalui HTTPS atau localhost.");
   }
-
-  const sekarang = new Date();
-  const tanggal = sekarang.toLocaleDateString("id-ID");
-  const waktu = sekarang.toLocaleTimeString("id-ID");
-
-  const baris = (label,id) =>
-    `<div>${label}: ${nilai(id)}</div>`;
-
-  document.getElementById("struk").innerHTML = `
-    <center>
-      <b>BUKTI TRANSAKSI GADAI HP</b>
-      <hr>
-      ${tanggal}<br>${waktu}
-      <hr>
-    </center>
-    ${baris("NIK","nik")}
-    ${baris("Nama","nama")}
-    ${baris("Alamat","alamat")}
-    ${baris("TTL","ttl")}
-    ${baris("No HP","hp")}
-    ${baris("Merk/Seri HP","merk")}
-    ${baris("RAM HP","ram")}
-    ${baris("No Rek/E-wallet","rekening")}
-    <hr>
-    ${baris("TANGGAL ACC","acc")}
-    ${baris("JATUH TEMPO","tempo")}
-    <hr>
-    <b>NOMINAL HARGA HP YG DIGADAI:</b><br>
-    Rp ${nilai("harga")}<br><br>
-    <b>NOMINAL YANG DITEBUS:</b><br>
-    Rp ${nilai("tebus")}
-    <hr>
-    <center>
-      <b>NOTE: WAJIB MEMBAWA KERTAS
-      BUKTI TRANSAKSI</b>
-    </center>
-  `;
-
-  window.print();
 }
+async function sendBluetooth(){
+  if(!writeCharacteristic){status("Sambungkan printer BLE terlebih dahulu.");return}
+  if(!$("nama").value.trim()){alert("Isi nama pelanggan terlebih dahulu.");$("nama").focus();return}
+  const data=escposReceipt();
+  try{
+    status("Mengirim struk ke printer…");
+    // BLE write payloads are chunked to keep within typical BLE limits.
+    const chunkSize=180;
+    for(let i=0;i<data.length;i+=chunkSize){
+      const chunk=data.slice(i,i+chunkSize);
+      if(writeCharacteristic.writeValueWithoutResponse && writeCharacteristic.properties.writeWithoutResponse){
+        await writeCharacteristic.writeValueWithoutResponse(chunk);
+      }else if(writeCharacteristic.writeValueWithResponse){
+        await writeCharacteristic.writeValueWithResponse(chunk);
+      }else{
+        await writeCharacteristic.writeValue(chunk);
+      }
+    }
+    status("Data struk sudah dikirim. Periksa hasil cetak; format dan karakter tergantung model printer.");
+  }catch(err){status("Gagal mengirim cetakan: "+(err.message||err)+". Printer mungkin memakai protokol berbeda atau tidak menerima ESC/POS.");}
+}
+$("connectBtn").addEventListener("click",connectPrinter);
+$("disconnectBtn").addEventListener("click",()=>{if(bleDevice?.gatt?.connected)bleDevice.gatt.disconnect();writeCharacteristic=null;status("Printer diputuskan.")});
+$("previewBtn").addEventListener("click",updateReceipt);
+$("printBtn").addEventListener("click",sendBluetooth);
+$("browserPrintBtn").addEventListener("click",()=>{updateReceipt();window.print()});
+$("saveBtn").addEventListener("click",()=>{
+  const data={};ids.forEach(id=>data[id]=$(id).value);
+  try{localStorage.setItem("buktiGadaiHpForm",JSON.stringify(data));status("Data disimpan di browser perangkat ini.")}catch(e){status("Penyimpanan tidak tersedia di browser ini.")}
+});
+$("clearBtn").addEventListener("click",()=>{
+  if(!confirm("Kosongkan semua data formulir?"))return;
+  ids.forEach(id=>$(id).value="");updateReceipt();
+});
+try{
+  const saved=JSON.parse(localStorage.getItem("buktiGadaiHpForm")||"{}");
+  ids.forEach(id=>{if(saved[id])$(id).value=saved[id]});
+}catch(e){}
+$("acc").value=new Date().toISOString().slice(0,10);
+updateReceipt();
 </script>
 </body>
 </html>
